@@ -4,7 +4,7 @@
 // dossier.json with make.fun's vendored library. Deterministic: files are
 // copied in sorted order and buildDossier's output is deterministic.
 import { buildDossier } from './vendor/makefun-game.ts';
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname);
@@ -15,6 +15,7 @@ const CAPS = {
   screenshots: { max: 4, max_bytes: 262144 },
   game_max_files: 993,
   game_max_bytes: 50331648,
+  game_path_max_bytes: 1000,
 };
 
 function copyTree(src: string, dest: string): void {
@@ -27,7 +28,6 @@ function copyTree(src: string, dest: string): void {
 if (!existsSync(join(ROOT, 'game'))) throw new Error('game/: no such directory');
 if (!existsSync(join(ROOT, 'screenshots'))) throw new Error('screenshots/: no such directory');
 
-rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 copyTree(join(ROOT, 'game'), join(OUT, 'game'));
 copyTree(join(ROOT, 'screenshots'), join(OUT, 'screenshots'));
